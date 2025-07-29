@@ -1,10 +1,62 @@
 import { AppLayout } from "@/components/layout/AppLayout";
 import { Badge } from "@/components/ui/badge";
 import { ArrowLeft } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+
+interface BookDetail {
+  title: string;
+  description?: string | { value: string };
+  covers?: number[];
+  created?: { value: string };
+  authors?: { author: { key: string } }[];
+}
+
+interface Author {
+  name: string;
+}
 
 export const BookDetailPage = () => {
   const navigate = useNavigate();
+  const { id: bookId } = useParams<{ id: string }>();
+  const [book, setBook] = useState<BookDetail | null>(null);
+  const [author, setAuthor] = useState<Author | null>(null);
+
+  useEffect(() => {
+    if (!bookId) return;
+
+    const fetchBook = async () => {
+      const res = await fetch(`https://openlibrary.org/works/${bookId}.json`);
+      const data = await res.json();
+      setBook(data);
+
+      const authorKey = data.authors?.[0]?.author?.key;
+      if (authorKey) {
+        const authorRes = await fetch(
+          `https://openlibrary.org${authorKey}.json`
+        );
+        const authorData = await authorRes.json();
+        setAuthor(authorData);
+      }
+    };
+
+    fetchBook();
+  }, [bookId]);
+
+  const getCoverImage = () => {
+    if (book?.covers?.[0]) {
+      return `https://covers.openlibrary.org/b/id/${book.covers[0]}-L.jpg`;
+    }
+    return "https://placehold.co/400x600?text=Sem+Capa";
+  };
+
+  const getDescription = () => {
+    if (!book?.description) return "Sem descrição.";
+    if (typeof book.description === "string") return book.description;
+    return book.description.value;
+  };
+
+  const createdAt = book?.created?.value?.split("T")[0];
 
   return (
     <AppLayout hideSidebar>
@@ -17,69 +69,53 @@ export const BookDetailPage = () => {
           Voltar
         </a>
 
-        <div className="flex-1 flex items-center justify-center gap-10 p-10">
-          <img
-            src="https://placehold.co/400x600/png?text=Capa+do+Livro"
-            alt="Capa do livro"
-            className="w-[260px] rounded shadow-lg"
-          />
+        {book ? (
+          <div className="flex-1 flex items-center justify-center gap-10 p-10">
+            <img
+              src={getCoverImage()}
+              alt="Capa do livro"
+              className="w-[260px] rounded shadow-lg"
+            />
 
-          <div className="max-w-2xl">
-            <div className="flex justify-between items-start">
-              <div>
-                <h1 className="text-2xl font-bold">AMANHECER NA COLHEITA</h1>
-                <p className="text-sm text-sky-800 font-medium">
-                  Suzanne Collins
-                </p>
-                <p className="text-xl font-semibold mt-2">R$ 49,90</p>
+            <div className="max-w-2xl">
+              <div className="flex justify-between items-start">
+                <div>
+                  <h1 className="text-2xl font-bold">{book.title}</h1>
+                  <p className="text-sm text-sky-800 font-medium">
+                    {author?.name ?? "Autor desconhecido"}
+                  </p>
 
-                <div className="text-sm text-muted-foreground mt-2 leading-6">
-                  <p>
-                    <strong>2017</strong> Páginas: 352
-                  </p>
-                  <p>
-                    <strong>ISBN:</strong> 9780751565362{" "}
-                    <strong>ISBN10:</strong> 0751565369
-                  </p>
-                  <p>
-                    <strong>Adicionado:</strong> 21/09/2023
-                  </p>
-                  <p>
-                    <strong>Sebo:</strong>{" "}
-                    <a href="#" className="text-sky-700 underline">
-                      Sebo do Lusca
-                    </a>
-                  </p>
+                  <div className="text-sm text-muted-foreground mt-2 leading-6">
+                    {createdAt && (
+                      <p>
+                        <strong>Adicionado em:</strong> {createdAt}
+                      </p>
+                    )}
+                    <p>
+                      <strong>ID:</strong> {bookId}
+                    </p>
+                  </div>
                 </div>
+                <Badge className="bg-blue-100 text-black border border-blue-400 rounded-full">
+                  OpenLibrary
+                </Badge>
               </div>
-              <Badge className="bg-blue-100 text-black border border-blue-400 rounded-full">
-                Bom Estado
-              </Badge>
-            </div>
 
-            <div className="mt-6">
-              <h2 className="text-xl font-bold border-b-2 border-sky-700 inline-block pb-1 mb-2">
-                Descrição
-              </h2>
-              <p className="text-sm leading-relaxed text-black">
-                Sempre foi difícil ser Harry Potter e não é muito mais fácil
-                agora que ele é um funcionário sobrecarregado do Ministério da
-                Magia, marido e pai de três filhos em idade escolar. Enquanto
-                Harry lida com um passado que se recusa a ficar onde pertence,
-                seu filho mais novo, Albus, precisa lutar com o peso de um
-                legado familiar que ele nunca quis. A medida que passado e
-                presente se fundem ameaçadoramente, pai e filho aprendem a
-                verdade incômoda: às vezes, a escuridão vem de lugares
-                inesperados. O roteiro de Harry Potter e a Criança Amaldiçoada
-                foi originalmente lançado como uma "edição especial de ensaio"
-                junto com a abertura da peça de Jack Thorne no West End de
-                Londres no verão de 2016. Baseada em uma história original de
-                J.K. Rowling, John Tiffany e Jack Thorne, a peça abriu para
-                críticas arrebatadoras.
-              </p>
+              <div className="mt-6">
+                <h2 className="text-xl font-bold border-b-2 border-sky-700 inline-block pb-1 mb-2">
+                  Descrição
+                </h2>
+                <p className="text-sm leading-relaxed text-black">
+                  {getDescription()}
+                </p>
+              </div>
             </div>
           </div>
-        </div>
+        ) : (
+          <div className="text-center text-gray-500 mt-20">
+            Carregando livro...
+          </div>
+        )}
       </div>
     </AppLayout>
   );

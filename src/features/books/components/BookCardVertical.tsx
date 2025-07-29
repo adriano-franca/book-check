@@ -1,8 +1,17 @@
 import type { Book } from "@/@types/books";
 
-export const BookCardVertical = ({ book, onClick }: { book?: Book, onClick?: () => void }) => {
+export const BookCardVertical = ({
+  book,
+  onClick,
+}: {
+  book?: any;
+  onClick?: () => void;
+}) => {
   return (
-    <div className="w-44 text-center p-2 cursor-pointer hover:scale-105 transition-transform duration-200 ease-in-out" onClick={onClick}>
+    <div
+      className="w-44 text-center p-2 cursor-pointer hover:scale-105 transition-transform duration-200 ease-in-out"
+      onClick={onClick}
+    >
       <img
         src={book?.coverImage}
         alt={book?.title}
@@ -13,7 +22,9 @@ export const BookCardVertical = ({ book, onClick }: { book?: Book, onClick?: () 
       </h3>
       <p className="text-xs font-semibold text-zinc-700">{book?.author}</p>
       <p className="text-xs text-zinc-600 italic">{book?.publisher}</p>
-      <p className="text-sm font-bold text-black mt-1">R$ {book?.price}</p>
+      {book?.price && (
+        <p className="text-sm font-bold text-black mt-1">R$ {book?.price}</p>
+      )}
     </div>
-  )
-}
+  );
+};
