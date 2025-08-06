@@ -44,7 +44,7 @@ export const BookDetailPage = () => {
   }, [bookId]);
 
   const getCoverImage = () => {
-    if (book?.covers?.[0]) {
+    if (book?.covers?.[0]) {''
       return `https://covers.openlibrary.org/b/id/${book.covers[0]}-L.jpg`;
     }
     return "https://placehold.co/400x600?text=Sem+Capa";
