@@ -1,6 +1,7 @@
 import { cn } from "@/lib/utils";
 import { Home, BookOpen, Bookmark, Cog, LogOut, MapPin } from "lucide-react";
 
+
 export const SidebarLayout = () => {
   const items = [
     {

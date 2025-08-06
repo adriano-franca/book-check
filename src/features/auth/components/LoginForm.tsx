@@ -24,8 +24,8 @@ export const LoginForm = ({
     onSuccess: (data) => {
       const { token, user } = data;
       if (token) {
-        setAuth(token, user);
-        navigate("/");
+          setAuth(token, user);
+          navigate("/");
       } else {
         toast.error("Token não recebido.");
       }
