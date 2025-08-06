@@ -11,6 +11,8 @@ import { PublisherListPage } from "@/features/publishers/pages/PublisherListPage
 import { UserDetailPage } from "@/features/user/pages/UserDetailPage";
 import { type RouteObject } from "react-router-dom";
 import { PublisherDetailPage } from '@/features/publishers/pages/PublisherDetailPage';
+import { UserLibrary } from "@/features/user/pages/UserLibrary";
+import { Catalogo } from "@/features/catalago/pages/catalogo";
 
 export const authRoutes: RouteObject[] = [
   {
@@ -67,7 +69,11 @@ export const authRoutes: RouteObject[] = [
       {
         path: "/editoras/:id",
         element: <PublisherDetailPage />,
-      }
+      },
+      {
+        path: "/biblioteca",
+        element:<UserLibrary/>
+      },
     ],
   },
 ];

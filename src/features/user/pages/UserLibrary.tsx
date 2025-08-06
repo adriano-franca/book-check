@@ -3,8 +3,8 @@ import axios from 'axios';
 import { useAuthStore } from '@/app/stores/authStore';
 import { useNavigate } from 'react-router-dom';
 
-export const WishListPage: React.FC = () => {
-  const { token, usuarioId, tipoUsuario } = useAuthStore();
+export const UserLibrary: React.FC = () => {
+  const { token, usuarioId, tipoUsuario } = useAuthStore    ();
   const navigate = useNavigate();
   const [livros, setLivros] = useState([]);
   const [novoLivroId, setNovoLivroId] = useState('');
@@ -12,34 +12,34 @@ export const WishListPage: React.FC = () => {
   const [error, setError] = useState('');
 
   useEffect(() => {
-    const fetchWishListPage = async () => {
+    const fetchBiblioteca = async () => {
       if (tipoUsuario !== 'leitor') return navigate('/catalogo');
       setLoading(true);
       try {
-        const response = await axios.get('http://localhost:8080/api/livroDesejado', {
+        const response = await axios.get('http://localhost:8080/api/biblioteca', {
           headers: { Authorization: `Bearer ${token}` },
         });
         setLivros(response.data);
       } catch (err: any) {
-        setError(err.response?.data?.message || 'Erro ao carregar lista de desejos');
+        setError(err.response?.data?.message || 'Erro ao carregar biblioteca');
       }
       setLoading(false);
     };
-    if (token) fetchWishListPage();
+    if (token) fetchBiblioteca();
     else navigate('/login');
   }, [token, tipoUsuario, navigate]);
 
   const handleAddLivro = async () => {
     setLoading(true);
     try {
-      await axios.post('http://localhost:8080/api/livroDesejado', {
+      await axios.post('http://localhost:8080/api/biblioteca', {
         livroId: parseInt(novoLivroId),
-        usuarioId,
+        leitorId: usuarioId,
       }, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setNovoLivroId('');
-      const response = await axios.get('http://localhost:8080/api/livroDesejado', {
+      const response = await axios.get('http://localhost:8080/api/biblioteca', {
         headers: { Authorization: `Bearer ${token}` },
       });
       setLivros(response.data);
@@ -49,22 +49,9 @@ export const WishListPage: React.FC = () => {
     setLoading(false);
   };
 
-  const handleRemoveLivro = async (id: number) => {
-    setLoading(true);
-    try {
-      await axios.delete(`http://localhost:8080/api/livroDesejado/${id}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      setLivros(livros.filter((livro: any) => livro.id !== id));
-    } catch (err: any) {
-      setError(err.response?.data?.message || 'Erro ao remover livro');
-    }
-    setLoading(false);
-  };
-
   return (
     <div>
-      <h1>Lista de Desejos</h1>
+      <h1>Minha Biblioteca</h1>
       {error && <p style={{ color: 'red' }}>{error}</p>}
       {loading && <p>Carregando...</p>}
       {tipoUsuario === 'leitor' && (
@@ -82,7 +69,6 @@ export const WishListPage: React.FC = () => {
         {livros.map((livro: any) => (
           <li key={livro.id}>
             Livro ID: {livro.livroId}
-            <button onClick={() => handleRemoveLivro(livro.id)}>Remover</button>
           </li>
         ))}
       </ul>

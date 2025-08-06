@@ -2,14 +2,7 @@ import { AppLayout } from "@/components/layout/AppLayout";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import type { Publisher, PublisherCategory } from "@/@types/publishers";
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselPrevious,
-  CarouselNext,
-} from "@/components/ui/carousel";
-import { PublisherCard } from "../components/PublisherCard";
+import { PublisherCard } from "../../publishers/components/PublisherCard";
 
 export const handlePublisherClick = (publisherId: string, navigate: ReturnType<typeof useNavigate>) => {
   navigate(`/editoras/${publisherId}`);
@@ -65,29 +58,19 @@ export const renderByCategoryResults = (publishersByCategory: PublisherCategory[
     {publishersByCategory.map((category) => (
       <div key={category.id}>
         <h2 className="text-xl font-bold mb-2">{category.name}</h2>
-        <Carousel opts={{ loop: true, align: "start" }} className="w-full">
-          <CarouselContent>
-            {category.publishers.length === 0 ? (
-              <CarouselItem>
-                <p className="text-gray-500">Nenhuma editora disponível nesta categoria.</p>
-              </CarouselItem>
-            ) : (
-              category.publishers.map((publisher) => (
-                <CarouselItem
-                  key={publisher.id}
-                  className="basis-1/2 sm:basis-1/3 md:basis-1/4 lg:basis-1/6"
-                >
-                  <PublisherCard
-                    publisher={publisher}
-                    onClick={() => handlePublisherClick(publisher.id, navigate)}
-                  />
-                </CarouselItem>
-              ))
-            )}
-          </CarouselContent>
-          <CarouselPrevious className="ml-2" />
-          <CarouselNext className="mr-2" />
-        </Carousel>
+        {category.publishers.length === 0 ? (
+          <p className="text-gray-500">Nenhuma editora disponível nesta categoria.</p>
+        ) : (
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+            {category.publishers.map((publisher) => (
+              <PublisherCard
+                key={publisher.id}
+                publisher={publisher}
+                onClick={() => handlePublisherClick(publisher.id, navigate)}
+              />
+            ))}
+          </div>
+        )}
       </div>
     ))}
   </div>
@@ -129,7 +112,6 @@ export const PublisherListPage = () => {
         })
         .finally(() => setIsLoading(false));
     } else {
-      // Use predefined Brazilian publishers
       setPublishersByCategory(CATEGORY_LIST);
     }
   }, [searchQuery]);

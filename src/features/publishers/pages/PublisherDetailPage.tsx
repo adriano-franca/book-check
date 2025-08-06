@@ -87,7 +87,7 @@ export const PublisherDetailPage = () => {
   };
 
   const handleBookClick = (bookId: string) => {
-    navigate(`/book/${bookId}`);
+    navigate(`/livro/${bookId}`);
   };
 
   return (
