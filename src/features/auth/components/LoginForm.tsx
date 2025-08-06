@@ -80,6 +80,12 @@ export const LoginForm = ({
         <Button type="submit" className="w-full" disabled={mutation.isPending}>
           {mutation.isPending ? "Entrando..." : "Login"}
         </Button>
+        <a
+            href="/register"
+            className="ml-auto text-sm underline-offset-4 text-right hover:underline"
+        >
+          Não possui conta?
+        </a>
       </div>
     </form>
   );

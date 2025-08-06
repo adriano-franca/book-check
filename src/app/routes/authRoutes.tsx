@@ -9,6 +9,7 @@ import { NearbyBookstoresPage } from "@/features/publishers/pages/NearbyBookstor
 import { PublisherListPage } from "@/features/publishers/pages/PublisherListPage";
 import { UserDetailPage } from "@/features/user/pages/UserDetailPage";
 import { type RouteObject } from "react-router-dom";
+import {RegisterPage} from "@/features/auth/pages/RegisterPage.tsx";
 
 export const authRoutes: RouteObject[] = [
   {
@@ -16,6 +17,10 @@ export const authRoutes: RouteObject[] = [
     children: [
       {
         path: "/",
+        element: <HomePage />,
+      },
+      {
+        path: "/home",
         element: <HomePage />,
       },
       {
@@ -57,6 +62,10 @@ export const authRoutes: RouteObject[] = [
       {
         path: "/editoras",
         element: <PublisherListPage />,
+      },
+      {
+        path: "/register",
+        element: <RegisterPage />,
       }
     ],
   },
