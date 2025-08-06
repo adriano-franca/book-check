@@ -1,4 +1,5 @@
 import { ProtectedRoute } from "@/components/layout/ProtectedRoute";
+import { AuthorDetailPage } from "@/features/authors/pages/AuthorDetailPage";
 import { AuthorListPage } from "@/features/authors/pages/AuthorListPage";
 import { BookCasePage } from "@/features/books/pages/BookCasePage";
 import { BookDetailPage } from "@/features/books/pages/BookDetailPage";
@@ -53,6 +54,10 @@ export const authRoutes: RouteObject[] = [
       {
         path: "/autores",
         element: <AuthorListPage />,
+      },
+      {
+        path: "/author/:id",
+        element: <AuthorDetailPage/>
       },
       {
         path: "/editoras",
