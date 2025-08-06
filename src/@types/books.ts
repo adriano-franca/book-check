@@ -1,4 +1,5 @@
 export interface Book {
+    ratings_average?: number;
     id: string;
     title: string;
     author: string;
