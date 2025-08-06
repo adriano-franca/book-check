@@ -1,4 +1,5 @@
-import { LoginForm } from "../components/LoginForm"
+import { LoginForm } from "../components/LoginForm";
+import { Link } from 'react-router-dom';
 
 export const LoginPage = () => {
   return (
@@ -14,9 +15,18 @@ export const LoginPage = () => {
         <div className="flex flex-1 items-center justify-center">
           <div className="w-full max-w-xs">
             <LoginForm />
+            <p className="mt-4 text-center text-sm text-gray-600">
+              Não tem uma conta?{' '}
+              <Link
+                to="/register"
+                className="text-blue-500 hover:underline font-medium"
+              >
+                Cadastrar
+              </Link>
+            </p>
           </div>
         </div>
       </div>
     </div>
-  )
-}
+  );
+};

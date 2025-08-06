@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../contexts/AuthContext';
+import { useAuthStore } from "@/app/stores/authStore";
 
 export const RegisterPage: React.FC = () => {
   const [formData, setFormData] = useState({
@@ -13,7 +13,7 @@ export const RegisterPage: React.FC = () => {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  const { login } = useAuth();
+  const login = useAuthStore((state) => state.login);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -36,7 +36,7 @@ export const RegisterPage: React.FC = () => {
         email: formData.email,
         password: formData.password,
       });
-      login(response.data.token); // Atualiza o contexto de autenticação
+      login(response.data.token); // Atualiza o store de autenticação
       navigate('/'); // Redireciona para o feed
     } catch (err: any) {
       setLoading(false);
