@@ -21,6 +21,71 @@ const BRAZILIAN_PUBLISHERS = [
   "Aleph",
 ];
 
+const INDEPENDENT_PUBLISHERS = [
+  "Editora 34",
+  "Editora Nós",
+  "Editora Urutau",
+  "Editora Patuá",
+  "Editora Moinhos",
+  "Editora Quelônio",
+  "Editora Kotter",
+  "Editora Reformatório",
+  "Editora Penalux",
+  "Editora Malê"
+];
+
+const CHILDREN_PUBLISHERS = [
+  "Editora Brinque-Book",
+  "Editora Peirópolis",
+  "Editora Callis",
+  "Editora Salamandra",
+  "Editora Panda Books",
+  "Editora Carochinha",
+  "Editora Girassol",
+  "Editora Vale das Letras",
+  "Editora Todolivro",
+  "Editora Ciranda Cultural"
+];
+
+const INTERNATIONAL_PUBLISHERS = [
+  "Penguin Random House",
+  "HarperCollins",
+  "Simon & Schuster",
+  "Hachette Livre",
+  "Macmillan Publishers",
+  "Oxford University Press",
+  "Cambridge University Press",
+  "Scholastic Corporation",
+  "Wiley",
+  "Pearson Education"
+];
+
+const COMIC_PUBLISHERS = [
+  "Panini Comics",
+  "Mauricio de Sousa Produções",
+  "Devir",
+  "Pixel Media",
+  "JBC",
+  "DC Comics",
+  "Marvel Comics",
+  "Dark Horse Comics",
+  "Image Comics",
+  "Vertigo"
+];
+
+const ACADEMIC_PUBLISHERS = [
+  "Editora da USP",
+  "Editora Fiocruz",
+  "Editora Unesp",
+  "Editora UFMG",
+  "Editora UnB",
+  "Elsevier",
+  "Springer Nature",
+  "Sage Publications",
+  "Taylor & Francis",
+  "MIT Press"
+];
+
 const mapToPublisher = (name: string): Publisher => ({
   id: encodeURIComponent(name.toLowerCase().replace(/\s+/g, "-")),
   name,
@@ -28,6 +93,11 @@ const mapToPublisher = (name: string): Publisher => ({
 
 const CATEGORY_LIST = [
   { id: "brazilian", name: "Editoras Brasileiras Populares", publishers: BRAZILIAN_PUBLISHERS.map(mapToPublisher) },
+  { id: "international", name: "Editoras Internacionais", publishers: INTERNATIONAL_PUBLISHERS.map(mapToPublisher) },
+  { id: "comics", name: "Editoras de Quadrinhos", publishers: COMIC_PUBLISHERS.map(mapToPublisher) },
+  { id: "academic", name: "Editoras Acadêmicas", publishers: ACADEMIC_PUBLISHERS.map(mapToPublisher) },
+  { id: "independent", name: "Editoras Independentes", publishers: INDEPENDENT_PUBLISHERS.map(mapToPublisher) },
+  { id: "children", name: "Editoras Infantis", publishers: CHILDREN_PUBLISHERS.map(mapToPublisher) },
 ];
 
 export const renderSearchResults = (searchQuery: string, publishers: Publisher[], isLoading: boolean) => (

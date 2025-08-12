@@ -61,13 +61,26 @@ export const PublisherDetailPage = () => {
       try {
         const decodedPublisher = decodeURIComponent(publisherId).replace(/-/g, " ");
         setPublisherName(decodedPublisher);
+        
+        // Consulta otimizada para buscar apenas livros da editora específica
         const res = await fetch(
           `https://openlibrary.org/search.json?publisher=${encodeURIComponent(
-            decodedPublisher
-          )}&limit=12&fields=key,title,author_name,cover_i,isbn,first_publish_year,publisher,ratings_average`
+            `"${decodedPublisher}"`  
+          )}&limit=13&fields=key,title,author_name,cover_i,isbn,first_publish_year,publisher,ratings_average`
         );
+        
         const data = await res.json();
-        const mappedBooks = data.docs.map(mapOpenLibraryToBook);
+        
+        // Filtro adicional para garantir que a editora seja exata
+        const mappedBooks = data.docs
+          .filter((doc: any) => 
+            doc.publisher && 
+            doc.publisher.some((pub: string) => 
+              pub.toLowerCase() === decodedPublisher.toLowerCase()
+            )
+          )
+          .map(mapOpenLibraryToBook);
+          
         setBooks(mappedBooks);
       } catch (error) {
         console.error("Erro ao buscar livros da editora:", error);
