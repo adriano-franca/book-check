@@ -22,7 +22,6 @@ import { useState, useEffect } from "react";
 import { useDebounce } from "@/app/hooks/useDebounce";
 import { searchOpenLibrary } from "@/features/search/searchService";
 
-// Tipos de Resultado da Busca
 interface LivroResultado {
   id: string;
   titulo: string;
@@ -37,12 +36,11 @@ interface SearchResult {
   autores: AutorResultado[];
 }
 
-// Itens do menu de navegação principal
 const menuItems = [
   { href: "/", label: "Início" },
-  { href: "/books", label: "Livros" },
-  { href: "/authors", label: "Autores" },
-  { href: "/publishers", label: "Editoras" },
+  { href: "/livros", label: "Livros" },
+  { href: "/autores", label: "Autores" },
+  { href: "/editoras", label: "Editoras" },
 ];
 
 export function TopbarLayout() {
@@ -88,7 +86,6 @@ export function TopbarLayout() {
   };
 
   return (
-    // ALTERAÇÃO 1: Cor de fundo alterada para azul e texto principal para branco
     <header className="flex items-center justify-between p-4 bg-blue-500 text-white border-b shadow-sm sticky top-0 z-50 gap-4">
       <Link to="/" className="text-2xl font-bold"> {/* Cor do link herdará 'text-white' do header */}
         BookCheck
@@ -107,7 +104,6 @@ export function TopbarLayout() {
             onBlur={() => setTimeout(() => setIsSearchFocused(false), 200)}
           />
           {isSearchFocused && searchQuery.length > 2 && (
-            // O dropdown de busca continua com fundo e texto padrão para legibilidade
             <div className="absolute z-10 w-full mt-1 bg-card text-card-foreground border rounded-md shadow-lg max-h-96 overflow-y-auto">
               {isSearchLoading ? (
                 <div className="p-3 text-sm text-center text-muted-foreground">Buscando...</div>
