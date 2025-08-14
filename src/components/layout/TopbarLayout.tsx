@@ -183,7 +183,7 @@ export function TopbarLayout() {
         
         {isAuthenticated && user ? (
           <DropdownMenu>
-            <DropdownMenuTrigger>
+            <DropdownMenuTrigger className="cursor-pointer hover:transform hover:scale-105">
               <Avatar>
                 <AvatarImage src={`https://i.pravatar.cc/150?u=${user.id}`} />
                 <AvatarFallback>{user.name?.charAt(0)}</AvatarFallback>
@@ -192,8 +192,8 @@ export function TopbarLayout() {
             <DropdownMenuContent>
               <DropdownMenuLabel>{user.name}</DropdownMenuLabel>
               <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={() => navigate("/profile")}>Perfil</DropdownMenuItem>
-              <DropdownMenuItem onClick={handleLogout}>Sair</DropdownMenuItem>
+              <DropdownMenuItem className="cursor-pointer" onClick={() => navigate(`/${user.id}`)}>Perfil</DropdownMenuItem>
+              <DropdownMenuItem className="cursor-pointer" onClick={handleLogout}>Sair</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         ) : (
