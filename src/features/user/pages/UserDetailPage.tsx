@@ -56,7 +56,7 @@ export const UserDetailPage = () => {
         <div className="flex items-start justify-between">
           <div className="flex items-center gap-6">
             <Avatar className="w-32 h-32">
-              <AvatarImage src={"https://i.pravatar.cc/150?u=${post.autor?.id}"} />
+              <AvatarImage src={`https://i.pravatar.cc/150?u=${user?.id}`} />
               <AvatarFallback>LF</AvatarFallback>
             </Avatar>
             <div>
