@@ -6,7 +6,7 @@ import { useAuthStore } from "./app/stores/authStore";
 import { useEffect } from "react";
 
 function App() {
-  const { isAuthenticated, token, _hasHydrated, setHasHydrated } = useAuthStore();
+  const { token, _hasHydrated, setHasHydrated } = useAuthStore();
   
   useEffect(() => {
     // Se o token existe após o carregamento inicial, garantimos que o estado está hidratado

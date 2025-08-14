@@ -1,4 +1,4 @@
-import { Topbar } from "./TopbarLayout";
+import { TopbarLayout } from "./TopbarLayout";
 import { SidebarLayout } from "./SidebarLayout";
 import { cn } from "@/lib/utils";
 
@@ -13,7 +13,7 @@ export const AppLayout = ({
 }) => {
   return (
     <div className="min-h-screen">
-      <Topbar />
+      <TopbarLayout />
 
       <div className={cn("flex-1 grid max-w-screen", {
         "grid-cols-[1fr_3fr]": !hideSidebar,
