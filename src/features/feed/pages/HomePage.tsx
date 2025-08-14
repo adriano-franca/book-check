@@ -7,6 +7,7 @@ import { toast } from "sonner";
 import { AxiosError } from "axios";
 import api from "@/app/config/axios.ts";
 import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
 
 interface Post {
   id: number;
@@ -95,21 +96,21 @@ export const HomePage = () => {
   }
 
   return (
-    <AppLayout>
-      <div className="p-4 bg-card border rounded-lg shadow-sm">
-        <textarea
-          className="flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-          placeholder="No que você está pensando?"
-          value={newPostText}
-          onChange={(e) => setNewPostText(e.target.value)}
-          rows={4}
-        />
-        <div className="flex justify-end mt-2">
-          <Button onClick={handleSubmitPost} disabled={posting}>
-            {posting ? "Publicando..." : "Publicar"}
-          </Button>
+      <AppLayout>
+        {/* Formulário de novo post */}
+        <div className="space-y-4 pb-6 border-b border-border mb-6">
+          <Textarea
+              placeholder="No que você está pensando?"
+              value={newPostText}
+              onChange={(e) => setNewPostText(e.target.value)}
+              rows={4}
+          />
+          <div className="flex justify-end">
+            <Button onClick={handleSubmitPost} disabled={posting}>
+              {posting ? "Publicando..." : "Publicar"}
+            </Button>
+          </div>
         </div>
-      </div>
 
       <div className="space-y-6 mt-6">
         {posts.length > 0 ? (

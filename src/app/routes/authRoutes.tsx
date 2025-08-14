@@ -10,6 +10,8 @@ import { PublisherListPage } from "@/features/publishers/pages/PublisherListPage
 import { UserDetailPage } from "@/features/user/pages/UserDetailPage";
 import { type RouteObject } from "react-router-dom";
 import {RegisterPage} from "@/features/auth/pages/RegisterPage.tsx";
+import { AuthorDetailPage } from "@/features/authors/pages/AuthorDetailPage";
+import { PublisherDetailPage } from '@/features/publishers/pages/PublisherDetailPage';
 
 export const authRoutes: RouteObject[] = [
   {
@@ -60,8 +62,17 @@ export const authRoutes: RouteObject[] = [
         element: <AuthorListPage />,
       },
       {
+        path: "/author/:id",
+        element: <AuthorDetailPage/>
+      },
+      {
         path: "/editoras",
         element: <PublisherListPage />,
+      },
+
+      {
+        path: "/editoras/:id",
+        element: <PublisherDetailPage />,
       },
       {
         path: "/register",

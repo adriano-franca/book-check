@@ -12,7 +12,7 @@ export interface Book {
     addAt?: string;
     sebo?: string;
     comments?: string;
-    rating?: number;
+    ratings_average?: number;
     publisher?: string;
 }
 
