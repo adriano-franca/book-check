@@ -1,4 +1,3 @@
-// @/app/stores/authStore.ts
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 
@@ -7,24 +6,25 @@ interface User {
   username: string;
   email: string;
   name?: string;
-  // Adicione outros campos do usuário conforme necessário
 }
 
 interface AuthState {
   token: string | null;
   user: User | null;
   isAuthenticated: boolean;
+  _hasHydrated: boolean; // Adicionado para controlar o estado de hidratação
   setAuth: (token: string, user: User) => void;
   clearAuth: () => void;
-  hydrateAuth: () => void;
+  setHasHydrated: (state: boolean) => void; // Adicionada função para mudar o estado
 }
 
 export const useAuthStore = create<AuthState>()(
     persist(
-        (set, get) => ({
+        (set) => ({
           token: null,
           user: null,
           isAuthenticated: false,
+          _hasHydrated: false, // Estado inicial
 
           setAuth: (token, user) => {
             set({
@@ -42,19 +42,25 @@ export const useAuthStore = create<AuthState>()(
             });
           },
 
-          hydrateAuth: () => {
-            // Pode ser usado para verificar a validade do token
-            const { token } = get();
-            set({ isAuthenticated: !!token });
+          setHasHydrated: (state) => { // Implementação da função
+            set({
+              _hasHydrated: state
+            });
           }
         }),
         {
-          name: "auth-storage", // Chave para localStorage
+          name: "auth-storage",
           storage: createJSONStorage(() => localStorage),
           partialize: (state) => ({
             token: state.token,
-            user: state.user
+            user: state.user,
+            isAuthenticated: state.isAuthenticated, // Persistir o isAuthenticated também
           }),
+          onRehydrateStorage: () => (state) => { // Ação a ser executada após a reidratação
+            if (state) {
+              state.setHasHydrated(true);
+            }
+          }
         }
     )
 );

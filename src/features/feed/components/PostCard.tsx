@@ -1,60 +1,73 @@
-import type { Post } from "@/@types/posts";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Heart, MessageCircle } from "lucide-react";
 import { useState } from "react";
-import { Card } from "@/components/ui/card";
-import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
-import {
-  MessageCircle,
-  Send,
-  ThumbsUp,
-  UserPlus,
-} from "lucide-react";
+import { toast } from "sonner";
+import { useAuthStore } from "@/app/stores/authStore";
+import { toggleLikePost } from "../services/curtidaService";
 
-export const PostCard = ({ post }: { post: Post }) => {
-  const [liked, setLiked] = useState(false);
-  const [likeCount, setLikeCount] = useState(0); // opcional
+interface Post {
+  id: number;
+  texto: string;
+  autor: {
+    id: number;
+    nome: string;
+  } | null; // Permite que o autor seja nulo
+  curtidas?: { autor: { id: number } }[];
+}
 
-  const toggleLike = () => {
-    setLiked((prev) => !prev);
-    setLikeCount((count) => (liked ? count - 1 : count + 1)); // opcional
+interface PostCardProps {
+  post: Post;
+}
+
+export function PostCard({ post: initialPost }: PostCardProps) {
+  const [post, setPost] = useState(initialPost);
+  const { user } = useAuthStore();
+
+  const isLikedByMe = post.curtidas?.some(curtida => curtida.autor.id === user?.id);
+
+  const handleLike = async () => {
+    try {
+      const updatedPost = await toggleLikePost(post.id);
+      setPost(updatedPost);
+    } catch (error) {
+      toast.error("Erro ao processar curtida.");
+      console.error(error);
+    }
   };
 
+  // Se o post não tiver autor, podemos optar por não renderizá-lo
+  if (!post.autor) {
+    return null; // Ou renderizar uma mensagem de "Post inválido"
+  }
+
   return (
-      <Card className="p-4 max-w-full overflow-hidden">
-        <div className="flex items-start gap-4">
-          <Avatar className="cursor-pointer w-12 h-12 shrink-0">
-            <AvatarImage src={post.avatarImage} alt={post?.autor?.nome ?? "Sebo do joão"} />
-            <AvatarFallback>
-              {post?.autor?.nome ? post.autor.nome
-                  .split(" ")
-                  .map((part) => part[0].toUpperCase())
-                  .slice(0, 2)
-                  .join("") : "SJ"}
-            </AvatarFallback>
-          </Avatar>
-
-          <div className="flex-1 overflow-hidden">
-            <div className="flex justify-between items-center">
-              <p className="font-medium cursor-pointer truncate">{post?.autor?.nome ?? "Sebo do joão"}</p>
-              <UserPlus size={20} className="text-muted-foreground cursor-pointer shrink-0" />
-            </div>
-
-            <p className="text-sm text-muted-foreground break-words mt-1">
-              {post.texto}
-            </p>
-
-            <div className="mt-4 flex gap-6 text-sky-500 items-center">
-              <div className="flex items-center gap-1 cursor-pointer" onClick={toggleLike}>
-                <ThumbsUp
-                    size={20}
-                    className={liked ? "fill-sky-500 text-sky-500" : "text-sky-500"}
-                />
-                <span className="text-sm">{likeCount}</span>
-              </div>
-
-              <Send className="cursor-pointer" />
-            </div>
-          </div>
+    <Card className="w-full max-w-2xl mx-auto">
+      <CardHeader className="flex flex-row items-center space-x-4">
+        <Avatar>
+          {/* CORREÇÃO APLICADA AQUI com '?' */}
+          <AvatarImage src={`https://i.pravatar.cc/150?u=${post.autor?.id}`} />
+          {/* CORREÇÃO APLICADA AQUI com '?' */}
+          <AvatarFallback>{post.autor?.nome.charAt(0)}</AvatarFallback>
+        </Avatar>
+        {/* CORREÇÃO APLICADA AQUI com '?' */}
+        <div className="font-semibold">{post.autor?.nome || "Usuário Anônimo"}</div>
+      </CardHeader>
+      <CardContent>
+        <p className="mb-4">{post.texto}</p>
+        <div className="flex items-center space-x-4">
+          <Button variant="ghost" size="icon" onClick={handleLike}>
+            <Heart className={`h-5 w-5 ${isLikedByMe ? 'text-red-500 fill-current' : ''}`} />
+          </Button>
+          <Button variant="ghost" size="icon">
+            <MessageCircle className="h-5 w-5" />
+          </Button>
         </div>
-      </Card>
+        <p className="text-sm text-muted-foreground mt-2">
+          {post.curtidas?.length || 0} curtidas
+        </p>
+      </CardContent>
+    </Card>
   );
-};
+}

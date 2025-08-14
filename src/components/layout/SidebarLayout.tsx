@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils";
-import { Home, BookOpen, Bookmark, Cog, LogOut, MapPin } from "lucide-react";
+import { Home, BookOpen, Bookmark, LogOut, MapPin } from "lucide-react";
 
 
 export const SidebarLayout = () => {
@@ -23,11 +23,6 @@ export const SidebarLayout = () => {
       icon: <BookOpen size={24} />,
       label: "Estante",
       href: "/estante",
-    },
-    {
-      icon: <Cog size={24} />,
-      label: "Configurações",
-      href: "/configuracoes",
     },
     {
       icon: <LogOut size={24} />,

@@ -7,7 +7,6 @@ import { toast } from "sonner";
 import { AxiosError } from "axios";
 import api from "@/app/config/axios.ts";
 import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
 
 interface Post {
   id: number;
@@ -17,7 +16,7 @@ interface Post {
     id: number;
   };
   avatarImage?: string;
-  // outros campos, se necessário
+  curtidas?: { autor: { id: number } }[];
 }
 
 export const HomePage = () => {
@@ -55,23 +54,26 @@ export const HomePage = () => {
       return;
     }
     fetchPosts();
-  }, []);
+  }, [isAuthenticated, token, navigate]);
 
   const handleSubmitPost = async () => {
-    if (!newPostText.trim()) return;
+    if (!newPostText.trim()) {
+      toast.error("A publicação não pode estar vazia.");
+      return;
+    }
 
     try {
       setPosting(true);
-      const response = await api.post("/usuario/publicacao", {
+      const now = new Date();
+      const formattedDate = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')} ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')}`;
+
+      await api.post("/usuario/publicacao", {
         texto: newPostText,
-        usuarioId: 2
+        dataHora: formattedDate,
       });
 
       toast.success("Post publicado com sucesso!");
-
       setNewPostText("");
-
-      // Atualiza a lista de posts
       await fetchPosts();
     } catch (error) {
       toast.error("Erro ao publicar post.");
@@ -83,47 +85,46 @@ export const HomePage = () => {
 
   if (loading) {
     return (
-        <AppLayout>
-          <div className="flex flex-col items-center justify-center min-h-[300px] gap-4">
-            <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-primary"></div>
-            <p className="text-muted-foreground">Carregando publicações...</p>
-          </div>
-        </AppLayout>
+      <AppLayout>
+        <div className="flex flex-col items-center justify-center min-h-[300px] gap-4">
+          <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-primary"></div>
+          <p className="text-muted-foreground">Carregando publicações...</p>
+        </div>
+      </AppLayout>
     );
   }
 
   return (
-      <AppLayout>
-        {/* Formulário de novo post */}
-        <div className="space-y-4 pb-6 border-b border-border mb-6">
-          <Textarea
-              placeholder="No que você está pensando?"
-              value={newPostText}
-              onChange={(e) => setNewPostText(e.target.value)}
-              rows={4}
-          />
-          <div className="flex justify-end">
-            <Button onClick={handleSubmitPost} disabled={posting}>
-              {posting ? "Publicando..." : "Publicar"}
-            </Button>
-          </div>
+    <AppLayout>
+      <div className="p-4 bg-card border rounded-lg shadow-sm">
+        <textarea
+          className="flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+          placeholder="No que você está pensando?"
+          value={newPostText}
+          onChange={(e) => setNewPostText(e.target.value)}
+          rows={4}
+        />
+        <div className="flex justify-end mt-2">
+          <Button onClick={handleSubmitPost} disabled={posting}>
+            {posting ? "Publicando..." : "Publicar"}
+          </Button>
         </div>
+      </div>
 
-        {/* Lista de posts */}
-        <div className="space-y-6">
-          {posts.length > 0 ? (
-              posts.map((post) => <PostCard key={`post-${post.id}`} post={post} />)
-          ) : (
-              <div className="flex flex-col items-center justify-center min-h-[300px]">
-                <p className="text-muted-foreground text-lg">
-                  Nenhuma publicação encontrada
-                </p>
-                <p className="text-sm text-muted-foreground/70">
-                  Seja o primeiro a compartilhar algo!
-                </p>
-              </div>
-          )}
-        </div>
-      </AppLayout>
+      <div className="space-y-6 mt-6">
+        {posts.length > 0 ? (
+          posts.map((post) => <PostCard key={`post-${post.id}`} post={post} />)
+        ) : (
+          <div className="flex flex-col items-center justify-center min-h-[300px]">
+            <p className="text-muted-foreground text-lg">
+              Nenhuma publicação encontrada
+            </p>
+            <p className="text-sm text-muted-foreground/70">
+              Seja o primeiro a compartilhar algo!
+            </p>
+          </div>
+        )}
+      </div>
+    </AppLayout>
   );
 };
