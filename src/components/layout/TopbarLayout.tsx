@@ -1,6 +1,6 @@
 import { Link, useNavigate } from "react-router-dom";
-import { Input } from "../ui/input";
-import { Button } from "../ui/button";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 import { useAuthStore } from "@/app/stores/authStore";
 import {
   DropdownMenu,
@@ -17,18 +17,19 @@ import {
   NavigationMenuList,
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useState, useEffect } from "react";
 import { useDebounce } from "@/app/hooks/useDebounce";
 import { searchOpenLibrary } from "@/features/search/searchService";
 
+// Interfaces para os resultados da busca
 interface LivroResultado {
-  id: string;
+  id: string; // ex: "/works/OL12345W"
   titulo: string;
   autor: string;
 }
 interface AutorResultado {
-  id: string;
+  id: string; // ex: "/authors/OL12345A"
   nome: string;
 }
 interface SearchResult {
@@ -36,24 +37,28 @@ interface SearchResult {
   autores: AutorResultado[];
 }
 
+// Itens do menu de navegação
 const menuItems = [
-  { href: "/", label: "Início" },
-  { href: "/livros", label: "Livros" },
-  { href: "/autores", label: "Autores" },
-  { href: "/editoras", label: "Editoras" },
-];
+    { label: "Início", href: "/" },
+    { label: "Livros", href: "/livros" },
+    { label: "Autores", href: "/autores" },
+    { label: "Editoras", href: "/editoras" }
+  ];
 
 export function TopbarLayout() {
   const { user, clearAuth, isAuthenticated } = useAuthStore();
   const navigate = useNavigate();
 
+  // Estados para a funcionalidade de busca
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState<SearchResult | null>(null);
   const [isSearchLoading, setIsSearchLoading] = useState(false);
   const [isSearchFocused, setIsSearchFocused] = useState(false);
 
+  // Hook para atrasar a busca e não sobrecarregar a API
   const debouncedSearchQuery = useDebounce(searchQuery, 400);
 
+  // Efeito para realizar a busca quando o termo de pesquisa (debounced) muda
   useEffect(() => {
     const performSearch = async () => {
       if (debouncedSearchQuery.length > 2) {
@@ -74,11 +79,13 @@ export function TopbarLayout() {
     performSearch();
   }, [debouncedSearchQuery]);
 
+  // Função para logout do usuário
   const handleLogout = () => {
     clearAuth();
     navigate("/login");
   };
 
+  // Função para limpar a busca ao clicar em um resultado
   const handleResultClick = () => {
     setSearchQuery('');
     setSearchResults(null);
@@ -87,13 +94,13 @@ export function TopbarLayout() {
 
   return (
     <header className="flex items-center justify-between p-4 bg-blue-500 text-white border-b shadow-sm sticky top-0 z-50 gap-4">
-      <Link to="/" className="text-2xl font-bold"> {/* Cor do link herdará 'text-white' do header */}
+      <Link to="/" className="text-2xl font-bold">
         BookCheck
       </Link>
 
+      {/* Barra de busca visível apenas para usuários autenticados */}
       {isAuthenticated && (
         <div className="relative w-full max-w-md">
-          {/* A cor do texto do input foi ajustada para melhor contraste */}
           <Input
             type="search"
             placeholder="Buscar livros e autores..."
@@ -103,6 +110,7 @@ export function TopbarLayout() {
             onFocus={() => setIsSearchFocused(true)}
             onBlur={() => setTimeout(() => setIsSearchFocused(false), 200)}
           />
+          {/* Dropdown de resultados da busca */}
           {isSearchFocused && searchQuery.length > 2 && (
             <div className="absolute z-10 w-full mt-1 bg-card text-card-foreground border rounded-md shadow-lg max-h-96 overflow-y-auto">
               {isSearchLoading ? (
@@ -115,20 +123,32 @@ export function TopbarLayout() {
                         <div>
                           <h3 className="p-2 text-xs font-semibold text-muted-foreground border-b">LIVROS</h3>
                           {searchResults.livros.map(livro => (
-                            <a href={`https://openlibrary.org${livro.id}`} target="_blank" rel="noopener noreferrer" key={livro.id} onClick={handleResultClick} className="block px-3 py-2 text-sm hover:bg-accent cursor-pointer">
+                            // Link para a página de detalhes do livro
+                            <Link
+                              to={`/livro/${livro.id.replace("/works/", "")}`}
+                              key={livro.id}
+                              onClick={handleResultClick}
+                              className="block px-3 py-2 text-sm hover:bg-accent cursor-pointer"
+                            >
                               <div className="font-medium">{livro.titulo}</div>
                               <div className="text-xs text-muted-foreground">{livro.autor}</div>
-                            </a>
+                            </Link>
                           ))}
                         </div>
                       )}
                       {searchResults.autores.length > 0 && (
-                         <div>
+                        <div>
                           <h3 className="p-2 text-xs font-semibold text-muted-foreground border-b">AUTORES</h3>
                           {searchResults.autores.map(autor => (
-                            <a href={`https://openlibrary.org${autor.id}`} target="_blank" rel="noopener noreferrer" key={autor.id} onClick={handleResultClick} className="block px-3 py-2 text-sm hover:bg-accent cursor-pointer">
+                             // Link para a página de detalhes do autor
+                            <Link
+                              to={`/author/${autor.id.replace("/authors/", "")}`}
+                              key={autor.id}
+                              onClick={handleResultClick}
+                              className="block px-3 py-2 text-sm hover:bg-accent cursor-pointer"
+                            >
                               <div className="font-medium">{autor.nome}</div>
-                            </a>
+                            </Link>
                           ))}
                         </div>
                       )}
@@ -143,7 +163,7 @@ export function TopbarLayout() {
         </div>
       )}
 
-      {/* ALTERAÇÃO 2: Agrupando o Menu de Navegação e o Perfil do Usuário */}
+      {/* Menu de navegação e perfil do usuário */}
       <div className="flex items-center gap-6">
         {isAuthenticated && (
             <NavigationMenu className="hidden md:flex">
@@ -151,7 +171,6 @@ export function TopbarLayout() {
                 {menuItems.map((item) => (
                   <NavigationMenuItem key={item.href}>
                     <Link to={item.href}>
-                      {/* Adicionado estilo para links brancos */}
                       <NavigationMenuLink className={`${navigationMenuTriggerStyle()} bg-transparent text-white hover:bg-blue-700 focus:bg-blue-700`}>
                         {item.label}
                       </NavigationMenuLink>

@@ -1,44 +1,40 @@
-import axios from 'axios';
+import api from '@/app/config/axios';
 
-interface OpenLibraryDoc {
-  key: string;
-  type: 'work' | 'author';
-  title?: string;       
-  name?: string;        
-  author_name?: string[];
+interface LivroResultado {
+  id: string;
+  titulo: string;
+  autor: string;
 }
 
-export const searchOpenLibrary = async (query: string) => {
-  if (!query || query.trim().length < 2) {
-    return { livros: [], autores: [] };
-  }
+interface AutorResultado {
+  id: string;
+  nome: string;
+}
 
-  const encodedQuery = encodeURIComponent(query);
-  const url = `https://openlibrary.org/search.json?q=${encodedQuery}&fields=key,type,title,name,author_name&limit=5`;
+interface EditoraResultado {
+  id: string;
+  nome: string;
+}
 
+export interface SearchResult {
+  livros: LivroResultado[];
+  autores: AutorResultado[];
+  editoras: EditoraResultado[];
+}
+
+/**
+ * Realiza uma busca por livros, autores e editoras na sua API de backend.
+ * @param query O termo que o usuário deseja buscar.
+ * @returns Uma promessa que resolve para um objeto contendo as listas de resultados.
+ */
+export const searchOpenLibrary = async (query: string): Promise<SearchResult> => {
   try {
-    const response = await axios.get<{ docs: OpenLibraryDoc[] }>(url);
-    const docs = response.data.docs;
-
-    const livros = docs
-      .filter(doc => doc.type === 'work' && doc.title)
-      .map(doc => ({
-        id: doc.key,
-        titulo: doc.title!,
-        autor: doc.author_name ? doc.author_name.join(', ') : 'Desconhecido'
-      }));
-
-    const autores = docs
-      .filter(doc => doc.type === 'author' && doc.name)
-      .map(doc => ({
-        id: doc.key,
-        nome: doc.name!,
-      }));
-
-    return { livros, autores };
-
+    const response = await api.get<SearchResult>('/search', {
+      params: { query },
+    });
+    return response.data;
   } catch (error) {
-    console.error("Erro ao buscar na Open Library API:", error);
-    return { livros: [], autores: [] };
+    console.error("Erro ao buscar no backend:", error);
+    return { livros: [], autores: [], editoras: [] };
   }
 };
