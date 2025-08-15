@@ -1,12 +1,14 @@
 import api from '@/app/config/axios';
 
-interface LivroResultado {
+// Interface movida para cá
+export interface LivroResultado {
   id: string;
   titulo: string;
   autor: string;
 }
 
-interface AutorResultado {
+// Interface movida para cá
+export interface AutorResultado {
   id: string;
   nome: string;
 }
@@ -35,6 +37,6 @@ export const searchOpenLibrary = async (query: string): Promise<SearchResult> =>
     return response.data;
   } catch (error) {
     console.error("Erro ao buscar no backend:", error);
-    return { livros: [], autores: [], editoras: [] };
+    throw error;
   }
 };

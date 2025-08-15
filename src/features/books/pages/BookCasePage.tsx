@@ -23,7 +23,6 @@ const statusLabels = {
   [StatusLeitura.NAO_INICIADO]: "Quero Ler",
   [StatusLeitura.RELENDO]: "Relendo",
   [StatusLeitura.ABANDONADO]: "Abandonei",
-  [StatusLeitura.PAUSADO]: "Pausado", // Adicionado para ser completo
 };
 
 

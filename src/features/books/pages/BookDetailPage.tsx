@@ -4,6 +4,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState, useMemo } from "react";
 import { BookStatusManager } from "../components/BookStatusManager";
 import type { Book } from "@/@types/books";
+import { AddToWishlistButton } from '../components/AddToWishlistButton';
 
 interface BookDetailAPI {
   title: string;
@@ -94,12 +95,16 @@ export const BookDetailPage = () => {
             <img src={bookForManager.coverImage} alt="Capa do livro" className="w-[260px] rounded shadow-lg" />
             <div className="max-w-2xl">
               <div className="flex justify-between items-start">
-                <div>
-                  <h1 className="text-2xl font-bold">{bookForManager.title}</h1>
-                  <p className="text-sm text-sky-800 font-medium">{bookForManager.author}</p>
+                  <div>
+                    <h1 className="text-2xl font-bold">{bookForManager.title}</h1>
+                    <p className="text-sm text-sky-800 font-medium">{bookForManager.author}</p>
+                  </div>
+
+                  <div className="flex flex-col items-end gap-2">
+                    <AddToWishlistButton book={bookForManager} />
+                    <BookStatusManager book={bookForManager} />
+                  </div>
                 </div>
-                <BookStatusManager book={bookForManager} />
-              </div>
               <div className="mt-6">
                 <h2 className="text-xl font-bold border-b-2 border-sky-700 inline-block pb-1 mb-2">Descrição</h2>
                 <p className="text-sm leading-relaxed text-black">{bookForManager.description}</p>

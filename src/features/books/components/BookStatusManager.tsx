@@ -28,7 +28,6 @@ const statusLabels: { [key in StatusLeitura]: string } = {
   [StatusLeitura.NAO_INICIADO]: "Quero Ler",
   [StatusLeitura.RELENDO]: "Relendo",
   [StatusLeitura.ABANDONADO]: "Abandonei",
-  [StatusLeitura.PAUSADO]: "Pausado",
 };
 
 export const BookStatusManager = ({ book }: BookStatusManagerProps) => {

@@ -20,24 +20,11 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useState, useEffect } from "react";
 import { useDebounce } from "@/app/hooks/useDebounce";
-import { searchOpenLibrary } from "@/features/search/searchService";
+import { searchOpenLibrary, type SearchResult } from "@/features/search/searchService";
+import { toast } from "sonner";
+import type { AxiosError } from "axios";
 
-// Interfaces para os resultados da busca
-interface LivroResultado {
-  id: string; // ex: "/works/OL12345W"
-  titulo: string;
-  autor: string;
-}
-interface AutorResultado {
-  id: string; // ex: "/authors/OL12345A"
-  nome: string;
-}
-interface SearchResult {
-  livros: LivroResultado[];
-  autores: AutorResultado[];
-}
 
-// Itens do menu de navegação
 const menuItems = [
     { label: "Início", href: "/" },
     { label: "Livros", href: "/livros" },
@@ -49,16 +36,13 @@ export function TopbarLayout() {
   const { user, clearAuth, isAuthenticated } = useAuthStore();
   const navigate = useNavigate();
 
-  // Estados para a funcionalidade de busca
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState<SearchResult | null>(null);
   const [isSearchLoading, setIsSearchLoading] = useState(false);
   const [isSearchFocused, setIsSearchFocused] = useState(false);
 
-  // Hook para atrasar a busca e não sobrecarregar a API
   const debouncedSearchQuery = useDebounce(searchQuery, 400);
 
-  // Efeito para realizar a busca quando o termo de pesquisa (debounced) muda
   useEffect(() => {
     const performSearch = async () => {
       if (debouncedSearchQuery.length > 2) {
@@ -68,6 +52,14 @@ export function TopbarLayout() {
           setSearchResults(results);
         } catch (error) {
           console.error("Erro na busca:", error);
+          const err = error as AxiosError;
+          if (err.response?.status === 401) {
+            toast.error("Sessão expirada. Faça login novamente.");
+            clearAuth();
+            navigate("/login", { replace: true });
+          } else {
+            toast.error("Erro ao realizar a busca.");
+          }
           setSearchResults(null);
         } finally {
           setIsSearchLoading(false);
@@ -77,15 +69,13 @@ export function TopbarLayout() {
       }
     };
     performSearch();
-  }, [debouncedSearchQuery]);
+  }, [debouncedSearchQuery, navigate, clearAuth]);
 
-  // Função para logout do usuário
   const handleLogout = () => {
     clearAuth();
     navigate("/login");
   };
 
-  // Função para limpar a busca ao clicar em um resultado
   const handleResultClick = () => {
     setSearchQuery('');
     setSearchResults(null);
@@ -98,7 +88,6 @@ export function TopbarLayout() {
         BookCheck
       </Link>
 
-      {/* Barra de busca visível apenas para usuários autenticados */}
       {isAuthenticated && (
         <div className="relative w-full max-w-md">
           <Input
@@ -110,7 +99,6 @@ export function TopbarLayout() {
             onFocus={() => setIsSearchFocused(true)}
             onBlur={() => setTimeout(() => setIsSearchFocused(false), 200)}
           />
-          {/* Dropdown de resultados da busca */}
           {isSearchFocused && searchQuery.length > 2 && (
             <div className="absolute z-10 w-full mt-1 bg-card text-card-foreground border rounded-md shadow-lg max-h-96 overflow-y-auto">
               {isSearchLoading ? (
@@ -123,7 +111,6 @@ export function TopbarLayout() {
                         <div>
                           <h3 className="p-2 text-xs font-semibold text-muted-foreground border-b">LIVROS</h3>
                           {searchResults.livros.map(livro => (
-                            // Link para a página de detalhes do livro
                             <Link
                               to={`/livro/${livro.id.replace("/works/", "")}`}
                               key={livro.id}
@@ -140,7 +127,6 @@ export function TopbarLayout() {
                         <div>
                           <h3 className="p-2 text-xs font-semibold text-muted-foreground border-b">AUTORES</h3>
                           {searchResults.autores.map(autor => (
-                             // Link para a página de detalhes do autor
                             <Link
                               to={`/author/${autor.id.replace("/authors/", "")}`}
                               key={autor.id}
@@ -163,7 +149,6 @@ export function TopbarLayout() {
         </div>
       )}
 
-      {/* Menu de navegação e perfil do usuário */}
       <div className="flex items-center gap-6">
         {isAuthenticated && (
             <NavigationMenu className="hidden md:flex">

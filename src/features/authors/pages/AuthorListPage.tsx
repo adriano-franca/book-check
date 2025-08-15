@@ -48,7 +48,12 @@ const CATEGORY_LIST = [
   { id: "historical_fiction", name: "Autores de Ficção Histórica", query: "subject:historical_fiction" },
 ];
 
-export const renderSearchResults = (searchQuery: string, authors: Author[], isLoading: boolean) => (
+export const renderSearchResults = (
+    searchQuery: string,
+    authors: Author[],
+    isLoading: boolean,
+    navigate: ReturnType<typeof useNavigate>
+) => (
   <div className="flex flex-col gap-4 w-full max-w-7xl px-4">
     <h2 className="text-xl font-bold">
       Resultados para: <span className="font-bold">{searchQuery}</span>
@@ -63,7 +68,7 @@ export const renderSearchResults = (searchQuery: string, authors: Author[], isLo
           <AuthorCardVertical
             key={author.id}
             author={author}
-            onClick={() => handleAuthorClick(author.id, useNavigate())}
+            onClick={() => handleAuthorClick(author.id, navigate)}
           />
         ))}
       </div>
@@ -173,7 +178,7 @@ export const AuthorListPage = () => {
         {isLoading ? (
           <p className="text-gray-500">Carregando...</p>
         ) : searchQuery ? (
-          renderSearchResults(searchQuery, authors, isLoading)
+          renderSearchResults(searchQuery, authors, isLoading, navigate)
         ) : (
           renderByCategoryResults(authorsByCategory, navigate)
         )}
