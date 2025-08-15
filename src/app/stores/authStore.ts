@@ -6,16 +6,17 @@ interface User {
   username: string;
   email: string;
   name?: string;
+  tipoUsuario?: 'LEITOR' | 'SEBO';
 }
 
 interface AuthState {
   token: string | null;
   user: User | null;
   isAuthenticated: boolean;
-  _hasHydrated: boolean; // Adicionado para controlar o estado de hidratação
+  _hasHydrated: boolean;
   setAuth: (token: string, user: User) => void;
   clearAuth: () => void;
-  setHasHydrated: (state: boolean) => void; // Adicionada função para mudar o estado
+  setHasHydrated: (state: boolean) => void;
 }
 
 export const useAuthStore = create<AuthState>()(
@@ -24,7 +25,7 @@ export const useAuthStore = create<AuthState>()(
           token: null,
           user: null,
           isAuthenticated: false,
-          _hasHydrated: false, // Estado inicial
+          _hasHydrated: false,
 
           setAuth: (token, user) => {
             set({
@@ -42,7 +43,7 @@ export const useAuthStore = create<AuthState>()(
             });
           },
 
-          setHasHydrated: (state) => { // Implementação da função
+          setHasHydrated: (state) => {
             set({
               _hasHydrated: state
             });
@@ -54,9 +55,9 @@ export const useAuthStore = create<AuthState>()(
           partialize: (state) => ({
             token: state.token,
             user: state.user,
-            isAuthenticated: state.isAuthenticated, // Persistir o isAuthenticated também
+            isAuthenticated: state.isAuthenticated,
           }),
-          onRehydrateStorage: () => (state) => { // Ação a ser executada após a reidratação
+          onRehydrateStorage: () => (state) => {
             if (state) {
               state.setHasHydrated(true);
             }

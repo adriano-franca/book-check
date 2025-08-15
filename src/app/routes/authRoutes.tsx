@@ -11,6 +11,7 @@ import { UserDetailPage } from "@/features/user/pages/UserDetailPage";
 import { type RouteObject } from "react-router-dom";
 import { AuthorDetailPage } from "@/features/authors/pages/AuthorDetailPage";
 import { PublisherDetailPage } from '@/features/publishers/pages/PublisherDetailPage';
+import { CatalogoPage } from '@/features/sebo/pages/CatalogoPage';
 
 export const authRoutes: RouteObject[] = [
   {
@@ -68,10 +69,13 @@ export const authRoutes: RouteObject[] = [
         path: "/editoras",
         element: <PublisherListPage />,
       },
-
       {
         path: "/editoras/:id",
         element: <PublisherDetailPage />,
+      },
+      {
+        path: "/sebo/catalogo",
+        element: <CatalogoPage />,
       },
     ],
   },
