@@ -6,7 +6,7 @@ import { getCatalogo, removeCatalogo, type CatalogoBook } from "../services/cata
 import { toast } from "sonner";
 import { BookExtensiveCard } from "@/features/books/components/BookExtensiveCard";
 import { AddBookToCatalogModal } from "../components/AddBookToCatalogoModal";
-import { EditCatalogItemModal } from "../components/EditCatalogItemModal"; // 1. Importar o novo modal
+import { EditCatalogItemModal } from "../components/EditCatalogItemModal";
 
 export const CatalogoPage = () => {
   const { user } = useAuthStore();
