@@ -3,15 +3,12 @@ import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
 export const NearbyBookstoresPage = () => {
-  // URL padrão do mapa, centralizado em um local genérico (Avenida Paulista, São Paulo)
   const defaultMapUrl = "https://maps.google.com/maps?q=livrarias+e+sebos+em+sao+paulo&z=15&output=embed";
 
-  // Estado para armazenar a URL do mapa e o status do carregamento
   const [mapUrl, setMapUrl] = useState<string>("");
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Verifica se o navegador suporta a API de Geolocalização
     if (!navigator.geolocation) {
       toast.error("Geolocalização não é suportada pelo seu navegador.");
       setMapUrl(defaultMapUrl);
@@ -19,25 +16,22 @@ export const NearbyBookstoresPage = () => {
       return;
     }
 
-    // Pede a localização do usuário
     navigator.geolocation.getCurrentPosition(
       (position) => {
         const { latitude, longitude } = position.coords;
-        // Constrói a nova URL do mapa com as coordenadas do usuário e a busca por "livrarias e sebos"
         const newMapUrl = `https://maps.google.com/maps?q=livrarias+e+sebos&ll=${latitude},${longitude}&z=15&output=embed`;
         setMapUrl(newMapUrl);
         setIsLoading(false);
         toast.success("Livrarias e sebos perto de você encontrados!");
       },
       (error) => {
-        // Trata os erros (permissão negada, etc.)
         console.error("Erro ao obter localização:", error);
         toast.warning("Não foi possível obter sua localização. Mostrando mapa padrão.");
         setMapUrl(defaultMapUrl);
         setIsLoading(false);
       }
     );
-  }, []); // O array vazio assegura que este efeito rode apenas uma vez, quando o componente montar
+  }, []);
 
   return (
     <AppLayout>
