@@ -9,9 +9,9 @@ import { NearbyBookstoresPage } from "@/features/publishers/pages/NearbyBookstor
 import { PublisherListPage } from "@/features/publishers/pages/PublisherListPage";
 import { UserDetailPage } from "@/features/user/pages/UserDetailPage";
 import { type RouteObject } from "react-router-dom";
-import {RegisterPage} from "@/features/auth/pages/RegisterPage.tsx";
 import { AuthorDetailPage } from "@/features/authors/pages/AuthorDetailPage";
 import { PublisherDetailPage } from '@/features/publishers/pages/PublisherDetailPage';
+import { CatalogoPage } from '@/features/sebo/pages/CatalogoPage';
 
 export const authRoutes: RouteObject[] = [
   {
@@ -50,7 +50,7 @@ export const authRoutes: RouteObject[] = [
         element: <BookDetailPage />,
       },
       {
-        path: "/user/:id",
+        path: "/:userId",
         element: <UserDetailPage />,
       },
       {
@@ -69,15 +69,14 @@ export const authRoutes: RouteObject[] = [
         path: "/editoras",
         element: <PublisherListPage />,
       },
-
       {
         path: "/editoras/:id",
         element: <PublisherDetailPage />,
       },
       {
-        path: "/register",
-        element: <RegisterPage />,
-      }
+        path: "/sebo/catalogo",
+        element: <CatalogoPage />,
+      },
     ],
   },
 ];

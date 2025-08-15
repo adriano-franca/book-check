@@ -1,42 +1,57 @@
 import { cn } from "@/lib/utils";
-import { Home, BookOpen, Bookmark, LogOut, MapPin } from "lucide-react";
+import { Home, BookOpen, Bookmark, LogOut, MapPin, Library } from "lucide-react";
+import { useAuthStore } from "@/app/stores/authStore";
+import React from "react";
+import { useNavigate } from "react-router-dom"; // 1. Importar o useNavigate
 
+interface MenuItem {
+  icon: React.ReactElement;
+  label: string;
+  href: string;
+  onClick?: (e: React.MouseEvent<HTMLAnchorElement>) => void;
+}
 
 export const SidebarLayout = () => {
-  const items = [
-    {
-      icon: <Home size={24} />,
-      label: "Home",
-      href: "/",
-    },
-    {
-      icon: <MapPin size={24} />,
-      label: "Livrarias Próximas",
-      href: "/livrarias-proximas",
-    },
-    {
-      icon: <Bookmark size={24} />,
-      label: "Lista de Desejos",
-      href: "/lista-de-desejos",
-    },
-    {
-      icon: <BookOpen size={24} />,
-      label: "Estante",
-      href: "/estante",
-    },
+  const { user, clearAuth } = useAuthStore();
+  const navigate = useNavigate(); // 2. Inicializar o hook
+  const isSebo = user?.tipoUsuario === 'SEBO';
+
+  const baseItems: MenuItem[] = [
+    { icon: <Home size={24} />, label: "Home", href: "/" },
+    { icon: <MapPin size={24} />, label: "Livrarias Próximas", href: "/livrarias-proximas" },
+  ];
+
+  const leitorItems: MenuItem[] = [
+    { icon: <Bookmark size={24} />, label: "Lista de Desejos", href: "/lista-de-desejos" },
+    { icon: <BookOpen size={24} />, label: "Estante", href: "/estante" },
+  ];
+
+  const seboItems: MenuItem[] = [
+    { icon: <Library size={24} />, label: "Gerenciar Catálogo", href: "/sebo/catalogo" },
+  ];
+
+  const finalItems: MenuItem[] = [
     {
       icon: <LogOut size={24} />,
       label: "Sair",
-      href: "/sair",
-      onclick: (e: React.MouseEvent<HTMLAnchorElement>) => {
+      href: "/login",
+      // 3. Usar o navigate para o logout
+      onClick: (e: React.MouseEvent<HTMLAnchorElement>) => {
         e.preventDefault();
-        window.location.href = "/login"; // Redirect to login page
+        clearAuth();
+        navigate("/login", { replace: true }); // Navegação mais limpa
       },
     }
   ];
 
+  const items = [...baseItems, ...(isSebo ? seboItems : leitorItems), ...finalItems];
+
   const isActive = (href: string) => {
-    return window.location.pathname === href;
+    const currentPath = window.location.pathname;
+    if (href === "/") {
+        return currentPath === "/";
+    }
+    return currentPath.startsWith(href);
   };
 
   return (
@@ -48,11 +63,9 @@ export const SidebarLayout = () => {
             href={item.href}
             className={cn(
               "flex items-center gap-2 text-sm text-sky-500 hover:text-sky-700",
-              {
-                "text-blue-600 text-lg": isActive(item.href),
-              }
+              { "text-blue-600 text-lg": isActive(item.href) }
             )}
-            onClick={item?.onclick}
+            onClick={item.onClick}
           >
             {item.icon} {item.label}
           </a>

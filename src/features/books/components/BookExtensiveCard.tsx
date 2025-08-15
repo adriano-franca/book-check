@@ -1,55 +1,73 @@
+import { useNavigate } from "react-router-dom";
 import type { Book } from "@/@types/books";
 import { Button } from "@/components/ui/button";
+import { Pencil, Trash2 } from "lucide-react";
+import type { CatalogoBook } from "@/features/sebo/services/catalogoService";
 
-export function BookExtensiveCard({
-  book,
-  type = "wishlist",
-}: {
-  book?: Book;
-  type?: "bookcase" | "wishlist";
-}) {
+interface BookExtensiveCardProps {
+  book?: Book | CatalogoBook;
+  type?: "bookcase" | "wishlist" | "catalogo";
+  onEdit?: (book: CatalogoBook) => void;
+  onDelete?: (book: CatalogoBook) => void;
+}
+
+export function BookExtensiveCard({ book, type = "wishlist", onEdit, onDelete }: BookExtensiveCardProps) {
+  const navigate = useNavigate();
+
+  const handleNavigateToDetails = () => {
+    if (book?.id) {
+      navigate(`/livro/${book.id}`);
+    }
+  };
+  
+  const catalogoBook = book as CatalogoBook;
+
   return (
-    <div className="flex rounded-lg shadow-md border border-black overflow-hidden">
+    <div className="flex rounded-lg shadow-md border border-black overflow-hidden bg-white">
       <img
         src={book?.coverImage}
         alt={book?.title}
-        className="w-64 h-auto object-cover"
+        className="w-48 h-auto object-cover cursor-pointer"
+        onClick={handleNavigateToDetails}
       />
 
       <div className="p-4 flex flex-col justify-between w-full">
-        <div className="space-y-2">
-          <div className="flex justify-between gap-1">
-            <div>
-              <h2 className="text-xl font-bold leading-tight text-zinc-900">
-                {book?.title}
-              </h2>
-              <p className="text-sm text-zinc-700 font-semibold">
-                {book?.author}
-              </p>
+        <div>
+          <div className="flex justify-between gap-2">
+            <div className="cursor-pointer" onClick={handleNavigateToDetails}>
+              <h2 className="text-xl font-bold leading-tight text-zinc-900">{book?.title}</h2>
+              <p className="text-sm text-zinc-700 font-semibold">{book?.author}</p>
             </div>
-            {type === "bookcase" && (
-              <div className="flex flex-col items-end">
-                <p className="text-sm font-semibold text-zinc-700">
-                  Avaliação: {book?.rating ? book.rating.toFixed(1) : "N/A"}/5h
-                </p>
+            
+            {/* Botões de Ação para o Catálogo */}
+            {type === 'catalogo' && (
+              <div className="flex gap-2">
+                <Button variant="ghost" size="icon" onClick={() => onEdit?.(catalogoBook)}>
+                  <Pencil className="h-4 w-4" />
+                </Button>
+                <Button variant="ghost" size="icon" onClick={() => onDelete?.(catalogoBook)}>
+                  <Trash2 className="h-4 w-4 text-red-600" />
+                </Button>
               </div>
             )}
           </div>
-          <p className="text-sm text-zinc-800 leading-relaxed line-clamp-4">
-            <strong className="font-semibold">Descrição:</strong>{" "}
+
+          <p className="text-sm text-zinc-800 leading-relaxed line-clamp-3 mt-2">
             {book?.description}
           </p>
-          {type === "bookcase" && (
-            <p className="text-sm text-zinc-800 leading-relaxed line-clamp-4">
-              <strong className="font-semibold">Comentários:</strong>{" "}
-              {book?.comments}
-            </p>
+          
+          {/* Informações específicas do catálogo */}
+          {type === 'catalogo' && (
+            <div className="text-xs text-zinc-600 mt-2 space-y-1">
+              <p><strong>Preço:</strong> R$ {catalogoBook.preco.toFixed(2)}</p>
+              <p><strong>Quantidade:</strong> {catalogoBook.quantidade}</p>
+              <p><strong>Estado:</strong> {catalogoBook.estadoConservacao}</p>
+            </div>
           )}
         </div>
-        <div className="mt-4 text-right">
-          <Button className="bg-sky-500 hover:bg-sky-600 text-white font-semibold px-4 py-1.5 rounded-md">
-            Buscar
-          </Button>
+        
+        <div className="mt-2 text-right">
+          <Button onClick={handleNavigateToDetails} size="sm">Ver Detalhes</Button>
         </div>
       </div>
     </div>
