@@ -88,7 +88,6 @@ export function PostCard({ post: initialPost }: PostCardProps) {
     }
   };
 
-  // Card principal sem comentários
   return (
     <>
       <Card
