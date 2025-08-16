@@ -12,6 +12,18 @@ import { type RouteObject } from "react-router-dom";
 import { AuthorDetailPage } from "@/features/authors/pages/AuthorDetailPage";
 import { PublisherDetailPage } from '@/features/publishers/pages/PublisherDetailPage';
 import { CatalogoPage } from '@/features/sebo/pages/CatalogoPage';
+import ChatPage from "@/features/chat/pages/ChatPage";
+import { useAuthStore } from "@/app/stores/authStore";
+
+const ChatPageRoute = () => {
+  const { user, token } = useAuthStore();
+
+  if (!user) {
+    return <div>Carregando...</div>; 
+  }
+
+  return <ChatPage currentUserId={user.id} apiBaseUrl={"http://localhost:8080"} token={token ?? undefined} />;
+}
 
 export const authRoutes: RouteObject[] = [
   {
@@ -76,6 +88,10 @@ export const authRoutes: RouteObject[] = [
       {
         path: "/sebo/catalogo",
         element: <CatalogoPage />,
+      },
+      {
+        path: "/chat",
+        element: <ChatPageRoute />,
       },
     ],
   },

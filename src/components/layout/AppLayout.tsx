@@ -1,8 +1,6 @@
 import { TopbarLayout } from "./TopbarLayout";
 import { SidebarLayout } from "./SidebarLayout";
 import { cn } from "@/lib/utils";
-import { useAuthStore } from "@/app/stores/authStore";
-import ChatPage from "@/features/chat/pages/ChatPage";
 
 export const AppLayout = ({
   children,
@@ -13,7 +11,7 @@ export const AppLayout = ({
   hideSidebar?: boolean;
   mainClassname?: string;
 }) => {
-  const { token, user } = useAuthStore();
+
   return (
     <div className="min-h-screen">
       <TopbarLayout />
@@ -39,8 +37,6 @@ export const AppLayout = ({
           {children}
         </div>
       </div>
-
-      <ChatPage currentUserId={user?.id ?? 1} apiBaseUrl={"http://localhost:8080"} token={token} />
     </div>
   );
 };

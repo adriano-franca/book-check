@@ -1,3 +1,5 @@
+// src/components/layout/TopbarLayout.tsx
+
 import { Link, useNavigate } from "react-router-dom";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -23,14 +25,14 @@ import { useDebounce } from "@/app/hooks/useDebounce";
 import { searchOpenLibrary, type SearchResult } from "@/features/search/searchService";
 import { toast } from "sonner";
 import type { AxiosError } from "axios";
-
+import { cn } from "@/lib/utils"; // Certifique-se de que 'cn' está importado
 
 const menuItems = [
     { label: "Início", href: "/" },
     { label: "Livros", href: "/livros" },
     { label: "Autores", href: "/autores" },
     { label: "Editoras", href: "/editoras" }
-  ];
+];
 
 export function TopbarLayout() {
   const { user, clearAuth, isAuthenticated } = useAuthStore();
@@ -155,11 +157,15 @@ export function TopbarLayout() {
               <NavigationMenuList>
                 {menuItems.map((item) => (
                   <NavigationMenuItem key={item.href}>
-                    <Link to={item.href}>
-                      <NavigationMenuLink className={`${navigationMenuTriggerStyle()} bg-transparent text-white hover:bg-blue-700 focus:bg-blue-700`}>
+                    {/* --- CORREÇÃO APLICADA AQUI --- */}
+                    <NavigationMenuLink asChild>
+                      <Link
+                        to={item.href}
+                        className={cn(navigationMenuTriggerStyle(), "bg-transparent text-white hover:bg-blue-700 focus:bg-blue-700")}
+                      >
                         {item.label}
-                      </NavigationMenuLink>
-                    </Link>
+                      </Link>
+                    </NavigationMenuLink>
                   </NavigationMenuItem>
                 ))}
               </NavigationMenuList>

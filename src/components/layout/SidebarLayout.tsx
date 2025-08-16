@@ -2,7 +2,9 @@ import { cn } from "@/lib/utils";
 import { Home, BookOpen, Bookmark, LogOut, MapPin, Library } from "lucide-react";
 import { useAuthStore } from "@/app/stores/authStore";
 import React from "react";
-import { useNavigate } from "react-router-dom"; // 1. Importar o useNavigate
+import { useNavigate } from "react-router-dom";
+//import { MessageSquare } from "lucide-react";
+
 
 interface MenuItem {
   icon: React.ReactElement;
@@ -13,11 +15,12 @@ interface MenuItem {
 
 export const SidebarLayout = () => {
   const { user, clearAuth } = useAuthStore();
-  const navigate = useNavigate(); // 2. Inicializar o hook
+  const navigate = useNavigate();
   const isSebo = user?.tipoUsuario === 'SEBO';
 
   const baseItems: MenuItem[] = [
     { icon: <Home size={24} />, label: "Home", href: "/" },
+    //{ icon: <MessageSquare size={24} />, label: "Chat", href: "/chat" },
     { icon: <MapPin size={24} />, label: "Livrarias Próximas", href: "/livrarias-proximas" },
   ];
 

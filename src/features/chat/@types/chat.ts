@@ -1,22 +1,28 @@
-export type UserSummary = {
+export interface UserSummaryDTO {
   id: number;
   nome: string;
-  email?: string;
-  avatarUrl?: string | null;
-  descricao?: string | null;
+  email: string;
+  avatarUrl?: string; 
+  descricao?: string;
   unread?: number;
-};
+}
 
-export type Message = {
+export interface MensagemDTO {
   id: number;
   conteudo: string;
-  dataEnvio: string; // ISO
+  dataEnvio: string; 
   lida: boolean;
-  remetente: UserSummary;
-  destinatario: UserSummary;
-};
+  remetente: UserSummaryDTO;
+  destinatario: UserSummaryDTO;
+}
 
-export type Conversation = {
-  user: UserSummary; // pessoa com quem estou conversando
-  lastMessage?: Message | null;
-};
+export interface ConversaDTO {
+  user: UserSummaryDTO;
+  lastMessage: MensagemDTO;
+}
+
+export interface EnviarMensagemRequest {
+    remetenteId: number;
+    destinatarioId: number;
+    conteudo: string;
+}
