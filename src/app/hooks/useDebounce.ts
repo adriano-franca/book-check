@@ -8,20 +8,17 @@ import { useState, useEffect } from 'react';
  * @returns O valor "atrasado".
  */
 export function useDebounce<T>(value: T, delay: number): T {
-  // Estado para armazenar o valor com atraso
   const [debouncedValue, setDebouncedValue] = useState<T>(value);
 
   useEffect(() => {
-    // Configura um temporizador para atualizar o valor com atraso
     const handler = setTimeout(() => {
       setDebouncedValue(value);
     }, delay);
 
-    // Limpa o temporizador se o valor mudar antes do atraso terminar
     return () => {
       clearTimeout(handler);
     };
-  }, [value, delay]); // Re-executa o efeito se o valor ou o atraso mudarem
+  }, [value, delay]);
 
   return debouncedValue;
 }

@@ -62,7 +62,6 @@ export const PublisherDetailPage = () => {
         const decodedPublisher = decodeURIComponent(publisherId).replace(/-/g, " ");
         setPublisherName(decodedPublisher);
         
-        // Consulta otimizada para buscar apenas livros da editora específica
         const res = await fetch(
           `https://openlibrary.org/search.json?publisher=${encodeURIComponent(
             `"${decodedPublisher}"`  
@@ -71,7 +70,6 @@ export const PublisherDetailPage = () => {
         
         const data = await res.json();
         
-        // Filtro adicional para garantir que a editora seja exata
         const mappedBooks = data.docs
           .filter((doc: any) => 
             doc.publisher && 

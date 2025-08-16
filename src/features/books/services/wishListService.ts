@@ -1,18 +1,15 @@
 import api from "@/app/config/axios";
 import type { Book } from "@/@types/books";
 
-// Interface para um item cru da API da wishlist
 interface WishlistItemAPI {
-  id: number; // ID do registro na tabela livro_desejado
+  id: number;
   workId: string;
 }
 
-// Interface para o livro completo na wishlist
 export interface WishlistBook extends Book {
   wishlistId: number;
 }
 
-// Payload para adicionar ao wishlist
 interface AddToWishlistPayload {
   leitorId: number;
   workId: string;

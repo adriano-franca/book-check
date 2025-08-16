@@ -1,5 +1,3 @@
-// src/components/layout/TopbarLayout.tsx
-
 import { Link, useNavigate } from "react-router-dom";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -25,7 +23,7 @@ import { useDebounce } from "@/app/hooks/useDebounce";
 import { searchOpenLibrary, type SearchResult } from "@/features/search/searchService";
 import { toast } from "sonner";
 import type { AxiosError } from "axios";
-import { cn } from "@/lib/utils"; // Certifique-se de que 'cn' está importado
+import { cn } from "@/lib/utils";
 
 const menuItems = [
     { label: "Início", href: "/" },

@@ -182,7 +182,6 @@ export const PublisherListPage = () => {
         })
         .finally(() => setIsLoading(false));
     } else {
-      // Use predefined Brazilian publishers
       setPublishersByCategory(CATEGORY_LIST);
     }
   }, [searchQuery]);

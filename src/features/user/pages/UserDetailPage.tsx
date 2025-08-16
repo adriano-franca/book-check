@@ -1,4 +1,3 @@
-// adriano-franca/book-check/book-check-b359a017e28bb7656858687cf2ed7bac0243b568/src/features/user/pages/UserDetailPage.tsx
 import { useState, useEffect } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { AppLayout } from "@/components/layout/AppLayout";
@@ -9,7 +8,7 @@ import { useParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ChatModal } from "@/features/chat/components/ChatModal";
 import { useAuthStore } from "@/app/stores/authStore";
-import type { ProfileUser } from "../@types"; // Importe o novo tipo
+import type { ProfileUser } from "../@types";
 
 export const UserDetailPage = () => {
   const { userId } = useParams<{ userId: string }>();
@@ -18,7 +17,6 @@ export const UserDetailPage = () => {
   
   const [loading, setLoading] = useState(true);
   const [posts, setPosts] = useState([]);
-  // Tipando o estado corretamente
   const [profileUser, setProfileUser] = useState<ProfileUser | null>(null); 
 
   const { user: currentUser } = useAuthStore();
@@ -45,7 +43,6 @@ export const UserDetailPage = () => {
       const { data } = await api.get(`/usuario/publicacao/usuario/${userId}`);
       setPosts(Array.isArray(data?.content) ? data.content : []);
     } catch (e) {
-        // Silenciosamente ignora o erro se o usuário não tiver posts
         console.log("Usuário não possui publicações.");
     }
   };

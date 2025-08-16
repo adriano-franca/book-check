@@ -15,7 +15,6 @@ export const CatalogoPage = () => {
   
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   
-  // 2. Estados para controlar o modal de edição
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [selectedBookForEdit, setSelectedBookForEdit] = useState<CatalogoBook | null>(null);
 
@@ -36,7 +35,6 @@ export const CatalogoPage = () => {
     fetchCatalogo();
   }, [fetchCatalogo]);
 
-  // 3. Função para abrir o modal de edição com o livro selecionado
   const handleOpenEditModal = (book: CatalogoBook) => {
     setSelectedBookForEdit(book);
     setIsEditModalOpen(true);
@@ -72,7 +70,6 @@ export const CatalogoPage = () => {
                 book={book} 
                 type="catalogo"
                 onDelete={() => handleDelete(book)}
-                // 4. Passar a função de edição para o card
                 onEdit={() => handleOpenEditModal(book)}
               />
             ))}

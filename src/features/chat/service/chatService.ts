@@ -1,5 +1,3 @@
-// src/features/chat/service/chatService.ts
-
 import api from "@/app/config/axios";
 import type { ConversaDTO, EnviarMensagemRequest, MensagemDTO, UserSummaryDTO } from "../@types/chat";
 

@@ -66,7 +66,6 @@ export const useAuthStore = create<AuthState>()(
     )
 );
 
-// Hook auxiliar para verificar autenticação
 export const useAuth = () => {
   const { token, isAuthenticated, user } = useAuthStore();
   return {

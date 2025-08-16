@@ -48,12 +48,10 @@ export const AddToWishlistButton = ({ book }: AddToWishlistButtonProps) => {
     setIsLoading(true);
     try {
       if (wishlistItemId) {
-        // Se o item existe, remove
         await removeFromWishlist(wishlistItemId);
         setWishlistItemId(null);
         toast.success("Livro removido da sua lista de desejos!");
       } else {
-        // Se não existe, adiciona
         const newItem = await addToWishlist({
           leitorId: user.id,
           workId: book.id,

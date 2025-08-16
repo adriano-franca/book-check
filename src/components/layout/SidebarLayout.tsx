@@ -3,7 +3,6 @@ import { Home, BookOpen, Bookmark, LogOut, MapPin, Library } from "lucide-react"
 import { useAuthStore } from "@/app/stores/authStore";
 import React from "react";
 import { useNavigate } from "react-router-dom";
-//import { MessageSquare } from "lucide-react";
 
 
 interface MenuItem {
@@ -20,7 +19,6 @@ export const SidebarLayout = () => {
 
   const baseItems: MenuItem[] = [
     { icon: <Home size={24} />, label: "Home", href: "/" },
-    //{ icon: <MessageSquare size={24} />, label: "Chat", href: "/chat" },
     { icon: <MapPin size={24} />, label: "Livrarias Próximas", href: "/livrarias-proximas" },
   ];
 
@@ -38,11 +36,11 @@ export const SidebarLayout = () => {
       icon: <LogOut size={24} />,
       label: "Sair",
       href: "/login",
-      // 3. Usar o navigate para o logout
+    
       onClick: (e: React.MouseEvent<HTMLAnchorElement>) => {
         e.preventDefault();
         clearAuth();
-        navigate("/login", { replace: true }); // Navegação mais limpa
+        navigate("/login", { replace: true });
       },
     }
   ];

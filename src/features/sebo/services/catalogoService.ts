@@ -1,10 +1,9 @@
 import api from "@/app/config/axios";
 import type { Book } from "@/@types/books";
 
-// Enums que espelham o backend
 export const EstadoConservacao = {
   NOVO: "NOVO",
-  SEMI_NOVO: "SEMI_NOVO",
+  SEMI_NOVO: "SEMINOVO",
   BOM: "BOM",
   USADO: "USADO",
   GASTO: "GASTO",
@@ -20,9 +19,8 @@ export const DisponibilidadeCatalogo = {
 } as const;
 export type DisponibilidadeCatalogo = typeof DisponibilidadeCatalogo[keyof typeof DisponibilidadeCatalogo];
 
-// Interface para um item cru que vem da sua API /catalogo/list/{seboId}
 interface CatalogoItemAPI {
-  id: number; // ID do registro na tabela catalogo
+  id: number;
   workId: string;
   estadoConservacao: EstadoConservacao;
   preco: number;
@@ -30,7 +28,6 @@ interface CatalogoItemAPI {
   status: DisponibilidadeCatalogo;
 }
 
-// Interface para o livro completo no catálogo
 export interface CatalogoBook extends Book {
   catalogoId: number;
   estadoConservacao: EstadoConservacao;
@@ -39,7 +36,6 @@ export interface CatalogoBook extends Book {
   status: DisponibilidadeCatalogo;
 }
 
-// Payload para ADICIONAR um novo item ao catálogo
 export interface AddToCatalogoPayload {
   seboId: number;
   workId: string;
@@ -49,7 +45,6 @@ export interface AddToCatalogoPayload {
   status: DisponibilidadeCatalogo;
 }
 
-// Payload para ATUALIZAR um item
 export interface UpdateCatalogoPayload {
   estadoConservacao: EstadoConservacao;
   preco: number;

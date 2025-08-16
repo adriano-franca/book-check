@@ -9,9 +9,7 @@ import { toggleLikePost } from "../services/curtidaService";
 import { Input } from "@/components/ui/input";
 import { createComment } from "../services/comentarioService";
 import { useNavigate } from "react-router-dom";
-import { Dialog, DialogContent } from "@/components/ui/dialog"; // Adicione o import
-
-// Remova o Modal customizado
+import { Dialog, DialogContent } from "@/components/ui/dialog";
 
 interface Author {
   id: number;

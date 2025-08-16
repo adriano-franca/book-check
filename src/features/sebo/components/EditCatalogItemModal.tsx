@@ -10,18 +10,16 @@ import { toast } from "sonner";
 interface EditCatalogItemModalProps {
   isOpen: boolean;
   onOpenChange: (isOpen: boolean) => void;
-  onBookUpdated: () => void; // Função para avisar a página principal que um livro foi atualizado
+  onBookUpdated: () => void;
   book: CatalogoBook | null;
 }
 
 export const EditCatalogItemModal = ({ isOpen, onOpenChange, onBookUpdated, book }: EditCatalogItemModalProps) => {
-  // Estados do formulário
   const [preco, setPreco] = useState('');
   const [quantidade, setQuantidade] = useState('');
   const [estado, setEstado] = useState<EstadoConservacao | ''>('');
   const [status, setStatus] = useState<DisponibilidadeCatalogo | ''>('');
 
-  // Efeito para preencher o formulário quando um livro é selecionado para edição
   useEffect(() => {
     if (book) {
       setPreco(String(book.preco));

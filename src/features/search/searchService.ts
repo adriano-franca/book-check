@@ -1,13 +1,11 @@
 import api from '@/app/config/axios';
 
-// Interface movida para cá
 export interface LivroResultado {
   id: string;
   titulo: string;
   autor: string;
 }
 
-// Interface movida para cá
 export interface AutorResultado {
   id: string;
   nome: string;

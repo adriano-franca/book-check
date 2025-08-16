@@ -1,7 +1,6 @@
 import React, { type TextareaHTMLAttributes } from "react";
 
 interface TextareaProps extends TextareaHTMLAttributes<HTMLTextAreaElement> {
-  // Aqui você pode adicionar outras props específicas, se quiser
 }
 
 export const Textarea: React.FC<TextareaProps> = ({

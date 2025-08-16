@@ -6,8 +6,6 @@ import { useAuthStore } from "@/app/stores/authStore";
 import { getBiblioteca, type BibliotecaBook, StatusLeitura } from "../services/bibliotecaService";
 import { toast } from "sonner";
 
-
-// Mapeia os labels do menu para os enums do serviço, facilitando a filtragem
 const statusMap: { [key: string]: StatusLeitura } = {
   "Lidos": StatusLeitura.COMPLETO,
   "Lendo": StatusLeitura.EM_ANDAMENTO,
@@ -16,7 +14,6 @@ const statusMap: { [key: string]: StatusLeitura } = {
   "Abandonei": StatusLeitura.ABANDONADO,
 };
 
-// Mapeia os enums de volta para os labels para destacar o filtro ativo
 const statusLabels = {
   [StatusLeitura.COMPLETO]: "Lidos",
   [StatusLeitura.EM_ANDAMENTO]: "Lendo",
@@ -49,7 +46,6 @@ export const BookCasePage = () => {
     fetchBiblioteca();
   }, [user]);
 
-  // Filtra os livros com base no status ativo, ou retorna todos se nenhum filtro estiver ativo
   const filteredBooks = useMemo(() => {
     if (!activeFilter) {
       return allBooks;
@@ -57,10 +53,8 @@ export const BookCasePage = () => {
     return allBooks.filter((book) => book.statusLeitura === activeFilter);
   }, [allBooks, activeFilter]);
 
-  // Função para lidar com o clique nos botões de filtro do menu
   const handleFilterChange = (label: string) => {
     const newStatus = statusMap[label];
-    // Se o filtro clicado já estiver ativo, desativa o filtro. Senão, ativa o novo.
     setActiveFilter(currentStatus => currentStatus === newStatus ? null : newStatus);
   };
 
