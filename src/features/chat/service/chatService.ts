@@ -36,5 +36,4 @@ export const enviarMensagem = async (payload: EnviarMensagemRequest): Promise<Me
     return data;
 };
 
-// Reexportando os tipos para facilitar a importação em outros arquivos
 export type { ConversaDTO, EnviarMensagemRequest, MensagemDTO, UserSummaryDTO };

@@ -3,7 +3,7 @@ import type { Book } from "@/@types/books";
 
 export const EstadoConservacao = {
   NOVO: "NOVO",
-  SEMI_NOVO: "SEMINOVO",
+  SEMI_NOVO: "SEMI_NOVO",
   BOM: "BOM",
   USADO: "USADO",
   GASTO: "GASTO",
